@@ -1,0 +1,23 @@
+﻿<Page x:Class="Shinima.Views.ListTasks"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Shinima.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ListTasks">
+
+    <Grid>
+        <ListView ItemsSource="{Binding Tasks}" SelectedItem="{Binding SelectTask}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Номер" DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Наименование" DisplayMemberBinding="{Binding FullTitle}"/>
+                    <GridViewColumn Header="Исполнитель" DisplayMemberBinding="{Binding IdExecutiveEmployeeNavigation.Lastname}"/>
+                    <GridViewColumn Header="Дедлайн" DisplayMemberBinding="{Binding Deadline, StringFormat=dd.MM.yyyy}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Page>

@@ -1,0 +1,30 @@
+﻿<Window x:Class="Shinima.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Shinima"
+        mc:Ignorable="d"
+        Title="" MinHeight="450" MinWidth="800" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel >
+            <Button Content="Дашборд" Command="{Binding OpenDashboard}"/>
+            <Button Content="Задачи" Command="{Binding OpenTasks}"/>
+            <Button Content="Гант" Command="{Binding OpenGant}"/>
+
+            <ListView ItemsSource="{Binding ListProject}" SelectedItem="{Binding SelectProject}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Проект" DisplayMemberBinding="{Binding Name}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+        </StackPanel>
+        <Frame Grid.Column="1" Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden"/>
+    </Grid>
+</Window>

@@ -15,16 +15,15 @@
             <Button Content="Дашборд" Command="{Binding OpenDashboard}"/>
             <Button Content="Задачи" Command="{Binding OpenTasks}"/>
             <Button Content="Гант" Command="{Binding OpenGant}"/>
-
-            <ListView ItemsSource="{Binding ListProject}" SelectedItem="{Binding SelectProject}">
+            <ListView ItemsSource="{Binding ListProjects}" SelectedItem="{Binding SelectProject}" Height="320">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Проект" DisplayMemberBinding="{Binding Name}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
-
         </StackPanel>
+        
         <Frame Grid.Column="1" Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

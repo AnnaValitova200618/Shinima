@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shinima.Models;
 
 public partial class Project
 {
     public int Id { get; set; }
-
+    
     public string FullTitle { get; set; } = null!;
 
     public string ShortTitle { get; set; } = null!;
 
-    public byte[] Icon { get; set; } = null!;
+    public byte[]? Icon { get; set; } 
 
     public DateTime CreatedTime { get; set; }
 
@@ -32,4 +33,7 @@ public partial class Project
     public virtual Employee IdResponsibleEmployee { get; set; } = null!;
 
     public virtual ICollection<Task> Tasks { get; } = new List<Task>();
+
+    [NotMapped]
+    public string? Name { get; set; }
 }

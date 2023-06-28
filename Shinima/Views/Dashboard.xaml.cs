@@ -20,7 +20,7 @@ namespace Shinima.Views
     /// </summary>
     public partial class Dashboard : Page
     {
-        public Dashboard()
+        public Dashboard(Models.Project selectProject)
         {
             InitializeComponent();
         }

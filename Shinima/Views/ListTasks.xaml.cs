@@ -21,10 +21,10 @@ namespace Shinima.Views
     /// </summary>
     public partial class ListTasks : Page
     {
-        public ListTasks()
+        public ListTasks(Models.Project selectProject)
         {
             InitializeComponent();
-            DataContext = new ListTasksVM();
+            DataContext = new ListTasksVM(selectProject);
         }
     }
 }

@@ -9,15 +9,57 @@
       Title="ListTasks">
 
     <Grid>
-        <ListView ItemsSource="{Binding Tasks}" SelectedItem="{Binding SelectTask}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Поиск:"/>
+            <TextBox Width="300"  Text="{Binding Search, NotifyOnTargetUpdated=True}"/>
+        </StackPanel>
+        <ListView ItemsSource="{Binding Tasks}" SelectedItem="{Binding SelectTask}" Grid.Row="1">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Номер" DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Наименование проекта" DisplayMemberBinding="{Binding IdProjectNavigation.ShortTitle}"/>
                     <GridViewColumn Header="Наименование" DisplayMemberBinding="{Binding FullTitle}"/>
                     <GridViewColumn Header="Исполнитель" DisplayMemberBinding="{Binding IdExecutiveEmployeeNavigation.Lastname}"/>
                     <GridViewColumn Header="Дедлайн" DisplayMemberBinding="{Binding Deadline, StringFormat=dd.MM.yyyy}"/>
                 </GridView>
             </ListView.View>
         </ListView>
+        <ScrollViewer Grid.Column="1" Grid.RowSpan="2" Visibility="{Binding Panel}">
+            <StackPanel Grid.Column="1" Grid.Row="1">
+                <Label Content="Подробный просмотр задачи" HorizontalAlignment="Center"/>
+                <Label Content="Наименование"/>
+                <TextBox/>
+                <Label Content="Короткое наименование"/>
+                <TextBox/>
+                <Label Content="Описание"/>
+                <TextBox/>
+                <Label Content="Исполнитель"/>
+                <ComboBox/>
+                <Label Content="Статус"/>
+                <TextBox/>
+                <Label Content="Дата создания"/>
+                <TextBox/>
+                <Label Content="Дата удаления"/>
+                <TextBox/>
+                <Label Content="Дата обновления"/>
+                <TextBox/>
+                <Label Content="Крайний исполнения задачи"/>
+                <TextBox/>
+                <Label Content="Предшествующая задача"/>
+                <TextBox/>
+                <Label Content="Фактическое время начала выполнения"/>
+                <TextBox/>
+                <Label Content="Фактическое время завершения выполнения"/>
+                <TextBox/>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

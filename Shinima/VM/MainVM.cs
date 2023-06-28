@@ -45,47 +45,78 @@ namespace Shinima.VM
             set
             {
                 selectProject = value;
+                OpenLastPage();
                 Signal();
             }
         }
-        public string Name { get; set; }
+        int lastpage;
         public MainVM()
         {
-            CurrentPage = new Dashboard();
+            
+
             try
             {
                 ListProjects = DBInstance.GetInstance().Projects.ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("нет");
                 return;
             }
-
+            SelectProject = ListProjects.First();
+            OpenLastPage();
 
             foreach (Project project in ListProjects)
             {
                 string name = project.FullTitle;
                 if (name.IndexOf(' ') > 0)
                 {
-                    string firstletter = name.Substring(0);
-                    string secondletter = name.Substring(name.IndexOf(' ') + 1);
-                    Name = $"{firstletter}{secondletter}";
+                    string firstletter = name.Substring(0, 1);
+                    string secondletter = name.Substring(name.IndexOf(' ') + 1, 1);
+                    project.Name = $"{firstletter}{secondletter}";
+
+                }
+                else
+                {
+                    string firstletter = name.Substring(0, 2);
+                    project.Name = $"{firstletter}";
+
                 }
             }
 
+            
             OpenDashboard = new CustomCommand(() =>
             {
-                CurrentPage = new Dashboard();
+                CurrentPage = new Dashboard(SelectProject);
+                Properties.Settings.Default.lastpage = 0;
+                Properties.Settings.Default.Save();
             });
             OpenTasks = new CustomCommand(() =>
             {
-                CurrentPage = new ListTasks();
+
+                CurrentPage = new ListTasks(SelectProject);
+                Properties.Settings.Default.lastpage = 1;
+                Properties.Settings.Default.Save();
+
             });
             OpenGant = new CustomCommand(() =>
             {
-                CurrentPage = new Gant();
+                CurrentPage = new Gant(SelectProject);
+                Properties.Settings.Default.lastpage = 2;
+                Properties.Settings.Default.Save();
             });
+        }
+
+        private void OpenLastPage()
+        {
+            lastpage = Properties.Settings.Default.lastpage;
+            
+            switch (lastpage)
+            {
+                case 0: CurrentPage = new Dashboard(SelectProject); break;
+                case 1: CurrentPage = new ListTasks(SelectProject); break;
+                case 2: CurrentPage = new Gant(SelectProject); break;
+            }
         }
     }
 }

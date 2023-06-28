@@ -20,7 +20,7 @@ namespace Shinima.Views
     /// </summary>
     public partial class Gant : Page
     {
-        public Gant()
+        public Gant(Models.Project selectProject)
         {
             InitializeComponent();
         }

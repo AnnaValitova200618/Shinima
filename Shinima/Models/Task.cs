@@ -19,17 +19,17 @@ public partial class Task
 
     public int IdStatus { get; set; }
 
-    public DateTime CreatedTime { get; set; }
+    public DateTime CreatedTime { get; set; } = DateTime.Now;
 
-    public DateTime? UpdateTime { get; set; }
+    public DateTime? UpdateTime { get; set; } = DateTime.Now;
 
-    public DateTime? DeletedTime { get; set; }
+    public DateTime? DeletedTime { get; set; } = DateTime.Now;
 
-    public DateTime Deadline { get; set; }
+    public DateTime Deadline { get; set; } = DateTime.Now;
 
-    public DateTime? StartActualTime { get; set; }
+    public DateTime? StartActualTime { get; set; } = DateTime.Now;
 
-    public DateTime? FinishActualTime { get; set; }
+    public DateTime? FinishActualTime { get; set; } = DateTime.Now;
 
     public int? IdPreviousTask { get; set; }
 

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Shinima.DB;
+using Shinima.Models;
 using Shinima.Tools;
 using System;
 using System.Collections.Generic;
@@ -13,9 +15,12 @@ namespace Shinima.VM
     public class ListTasksVM : BaseVM
     {
         private List<Models.Task> tasks;
-        private Task selectTask;
+        private Models.Task selectTask;
         private string search = "";
         private Visibility panel = Visibility.Collapsed;
+        private Employee selectEmployee;
+        private Status selectStatus;
+        private Models.Task selectBeforTask;
         private readonly Models.Project selectProject;
 
         public List<Models.Task> Tasks
@@ -27,19 +32,26 @@ namespace Shinima.VM
                 Signal();
             }
         }
-        public Task SelectTask
+        public Models.Task SelectTask
         {
             get => selectTask;
             set
             {
                 selectTask = value;
-                if(selectTask != null)
+                if (selectTask != null)
                 {
                     Panel = Visibility.Visible;
+                    Task = SelectTask;
+                    SelectEmployee = SelectTask.IdExecutiveEmployeeNavigation;
+                    SelectStatus = SelectTask.IdStatusNavigation;
+                    SelectBeforTask = SelectTask.IdPreviousTaskNavigation;
                 }
                 Signal();
                 Signal(nameof(Panel));
-                
+                Signal(nameof(Task));
+                Signal(nameof(SelectEmployee));
+                Signal(nameof(SelectStatus));
+                Signal(nameof(SelectBeforTask));
             }
         }
         public string Search
@@ -51,7 +63,7 @@ namespace Shinima.VM
                 DoSearch();
             }
         }
-        public Visibility Panel 
+        public Visibility Panel
         {
             get => panel;
             set
@@ -60,7 +72,39 @@ namespace Shinima.VM
                 Signal();
             }
         }
-
+        public CustomCommand AddTask { get; set; }
+        public CustomCommand Save { get; set; }
+        public Models.Task Task { get; set; }
+        public List<Employee> Employees { get; set; }
+        public Employee SelectEmployee
+        {
+            get => selectEmployee;
+            set
+            {
+                selectEmployee = value;
+                Signal();
+            }
+        }
+        public List<Status> Statuses { get; set; }
+        public Status SelectStatus
+        {
+            get => selectStatus;
+            set
+            {
+                selectStatus = value;
+                Signal();
+            }
+        }
+        public List<Models.Task> BeforTasks { get; set; }
+        public Models.Task? SelectBeforTask 
+        {
+            get => selectBeforTask;
+            set
+            {
+                selectBeforTask = value;
+                Signal();
+            }
+        }
         private void DoSearch()
         {
             var taskList = GetTasks(selectProject).Where(s => s.FullTitle.Contains(Search) ||
@@ -73,8 +117,57 @@ namespace Shinima.VM
         {
             this.selectProject = selectProject;
             Tasks = GetTasks(selectProject).ToList();
-            
+            Employees = DBInstance.GetInstance().Employees.ToList();
+            Statuses = DBInstance.GetInstance().Statuses.ToList();
+            BeforTasks = DBInstance.GetInstance().Tasks.ToList();
 
+            AddTask = new CustomCommand(() =>
+            {
+                Panel = Visibility.Visible;
+                
+                
+                Task = new Models.Task();
+                Signal(nameof(Task));
+            });
+            Save = new CustomCommand(() =>
+            {
+                
+                try
+                {
+                    Task.IdProject = selectProject.Id;
+                    Task.IdPreviousTask = SelectBeforTask?.Id;
+                    Task.IdExecutiveEmployee = SelectEmployee.Id;
+                    Task.IdStatus = SelectStatus.Id;
+
+                    if (string.IsNullOrEmpty(Task.Description) ||
+                        string.IsNullOrEmpty(Task.FullTitle) ||
+                        Task.Deadline == null ||
+                        Task.FinishActualTime == null ||
+                        Task.StartActualTime == null ||
+                        string.IsNullOrEmpty(Task.ShortTitle) ||
+                        SelectEmployee == null ||
+                        SelectStatus == null)
+                    {
+                        MessageBox.Show("Необходимо заполнить все данные");
+                        return;
+                    }
+                    if (Task.Id == 0)
+                    {
+                        Task.CreatedTime = DateTime.Now;
+                        DBInstance.GetInstance().Tasks.Add(Task);
+
+                    }
+                    DBInstance.GetInstance().SaveChanges();
+                    MessageBox.Show("Сохранение прошло успешно");
+                    Tasks = GetTasks(selectProject).ToList();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Что-то пошло не так");
+                    return;
+                }
+                
+            });
         }
 
         private static IQueryable<Models.Task> GetTasks(Models.Project selectProject)

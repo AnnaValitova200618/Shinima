@@ -12,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -19,7 +20,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal">
             <Label Content="Поиск:"/>
-            <TextBox Width="300"  Text="{Binding Search, NotifyOnTargetUpdated=True}"/>
+            <TextBox Width="300"  Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <ListView ItemsSource="{Binding Tasks}" SelectedItem="{Binding SelectTask}" Grid.Row="1">
             <ListView.View>
@@ -32,33 +33,41 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ScrollViewer Grid.Column="1" Grid.RowSpan="2" Visibility="{Binding Panel}">
-            <StackPanel Grid.Column="1" Grid.Row="1">
+        <Button Grid.Row="2" HorizontalAlignment="Right" Content="Добавить задачу" Command="{Binding AddTask}"/>
+        <ScrollViewer Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Visibility="{Binding Panel}">
+            <StackPanel >
                 <Label Content="Подробный просмотр задачи" HorizontalAlignment="Center"/>
                 <Label Content="Наименование"/>
-                <TextBox/>
+                <TextBox Text="{Binding Task.FullTitle}"/>
                 <Label Content="Короткое наименование"/>
-                <TextBox/>
+                <TextBox Text="{Binding Task.ShortTitle}"/>
                 <Label Content="Описание"/>
-                <TextBox/>
+                <TextBox Text="{Binding Task.Description}"/>
                 <Label Content="Исполнитель"/>
-                <ComboBox/>
+                <ComboBox ItemsSource="{Binding Employees}"
+                          SelectedItem="{Binding SelectEmployee}"
+                           DisplayMemberPath="Lastname"/>
                 <Label Content="Статус"/>
-                <TextBox/>
+                <ComboBox ItemsSource="{Binding Statuses}"
+                          SelectedItem="{Binding SelectStatus}"
+                          DisplayMemberPath="Name"/>
                 <Label Content="Дата создания"/>
-                <TextBox/>
+                <DatePicker Text="{Binding Task.CreatedTime}"/>
                 <Label Content="Дата удаления"/>
-                <TextBox/>
+                <DatePicker Text="{Binding Task.DeletedTime}"/>
                 <Label Content="Дата обновления"/>
-                <TextBox/>
+                <DatePicker Text="{Binding Task.UpdateTime}"/>
                 <Label Content="Крайний исполнения задачи"/>
-                <TextBox/>
+                <DatePicker Text="{Binding Task.Deadline}"/>
                 <Label Content="Предшествующая задача"/>
-                <TextBox/>
+                <ComboBox ItemsSource="{Binding BeforTasks}"
+                          SelectedItem="{Binding SelectBeforTask}"
+                          DisplayMemberPath="ShortTitle"/>
                 <Label Content="Фактическое время начала выполнения"/>
-                <TextBox/>
+                <DatePicker Text="{Binding Task.StartActualTime}"/>
                 <Label Content="Фактическое время завершения выполнения"/>
-                <TextBox/>
+                <DatePicker Text="{Binding Task.FinishActualTime}"/>
+                <Button Content="Сохранить" Command="{Binding Save}"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

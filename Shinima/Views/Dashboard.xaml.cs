@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shinima.VM;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace Shinima.Views
         public Dashboard(Models.Project selectProject)
         {
             InitializeComponent();
+            DataContext = new DashboardVM(selectProject);
         }
     }
 }

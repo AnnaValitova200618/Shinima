@@ -7,12 +7,10 @@ namespace Shinima.Models;
 public partial class Project
 {
     public int Id { get; set; }
-    
+
     public string FullTitle { get; set; } = null!;
 
     public string ShortTitle { get; set; } = null!;
-
-    public byte[]? Icon { get; set; } 
 
     public DateTime CreatedTime { get; set; }
 
@@ -27,6 +25,8 @@ public partial class Project
     public int IdCreatorEmployee { get; set; }
 
     public int IdResponsibleEmployeeId { get; set; }
+
+    public byte[]? Icon { get; set; }
 
     public virtual Employee IdCreatorEmployeeNavigation { get; set; } = null!;
 

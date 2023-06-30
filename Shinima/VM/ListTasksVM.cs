@@ -74,9 +74,10 @@ namespace Shinima.VM
         }
         public CustomCommand AddTask { get; set; }
         public CustomCommand Save { get; set; }
+        public CustomCommand Del { get; set; }
         public Models.Task Task { get; set; }
         public List<Employee> Employees { get; set; }
-        public Employee SelectEmployee
+        public Employee? SelectEmployee
         {
             get => selectEmployee;
             set
@@ -86,7 +87,7 @@ namespace Shinima.VM
             }
         }
         public List<Status> Statuses { get; set; }
-        public Status SelectStatus
+        public Status? SelectStatus
         {
             get => selectStatus;
             set
@@ -119,7 +120,7 @@ namespace Shinima.VM
             Tasks = GetTasks(selectProject).ToList();
             Employees = DBInstance.GetInstance().Employees.ToList();
             Statuses = DBInstance.GetInstance().Statuses.ToList();
-            BeforTasks = DBInstance.GetInstance().Tasks.ToList();
+            BeforTasks = DBInstance.GetInstance().Tasks.Where(s=>s.DeletedTime == null).ToList();
 
             AddTask = new CustomCommand(() =>
             {
@@ -134,23 +135,20 @@ namespace Shinima.VM
                 
                 try
                 {
-                    Task.IdProject = selectProject.Id;
-                    Task.IdPreviousTask = SelectBeforTask?.Id;
-                    Task.IdExecutiveEmployee = SelectEmployee.Id;
-                    Task.IdStatus = SelectStatus.Id;
-
+                 
                     if (string.IsNullOrEmpty(Task.Description) ||
                         string.IsNullOrEmpty(Task.FullTitle) ||
-                        Task.Deadline == null ||
-                        Task.FinishActualTime == null ||
-                        Task.StartActualTime == null ||
-                        string.IsNullOrEmpty(Task.ShortTitle) ||
-                        SelectEmployee == null ||
-                        SelectStatus == null)
+                        string.IsNullOrEmpty(Task.ShortTitle))
                     {
                         MessageBox.Show("Необходимо заполнить все данные");
                         return;
                     }
+
+                    Task.IdProject = selectProject.Id;
+                    Task.IdPreviousTask = SelectBeforTask?.Id;
+                    Task.IdExecutiveEmployee = SelectEmployee?.Id;
+                    Task.IdStatus = SelectStatus?.Id;
+
                     if (Task.Id == 0)
                     {
                         Task.CreatedTime = DateTime.Now;
@@ -168,6 +166,21 @@ namespace Shinima.VM
                 }
                 
             });
+            Del = new CustomCommand(() =>
+            {
+                if(SelectTask == null)
+                {
+                    MessageBox.Show("Необходимо выбрать конктретную задачу");
+                    return;
+                }
+                else
+                {
+                    SelectTask.DeletedTime = DateTime.Now;
+                    DBInstance.GetInstance().SaveChanges();
+                    MessageBox.Show("Удаление прошло успешно");
+                    Tasks = GetTasks(selectProject).ToList();
+                }
+            });
         }
 
         private static IQueryable<Models.Task> GetTasks(Models.Project selectProject)
@@ -175,7 +188,9 @@ namespace Shinima.VM
             return DBInstance.GetInstance().Tasks
                             .Include(s => s.IdExecutiveEmployeeNavigation)
                             .Include(s => s.IdProjectNavigation)
-                            .Where(s => s.IdStatus != 1 && s.IdProject == selectProject.Id);
+                            .Where(s => s.IdStatus != 1 
+                            && s.IdProject == selectProject.Id
+                            && s.DeletedTime == null);
         }
 
     }

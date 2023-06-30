@@ -23,6 +23,11 @@
             <TextBox Width="300"  Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <ListView ItemsSource="{Binding Tasks}" SelectedItem="{Binding SelectTask}" Grid.Row="1">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Удалить" Command="{Binding Del}"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Номер" DisplayMemberBinding="{Binding Id}"/>
@@ -52,21 +57,21 @@
                           SelectedItem="{Binding SelectStatus}"
                           DisplayMemberPath="Name"/>
                 <Label Content="Дата создания"/>
-                <DatePicker Text="{Binding Task.CreatedTime}"/>
+                <DatePicker SelectedDate="{Binding Task.CreatedTime}"/>
                 <Label Content="Дата удаления"/>
-                <DatePicker Text="{Binding Task.DeletedTime}"/>
+                <DatePicker SelectedDate="{Binding Task.DeletedTime}"/>
                 <Label Content="Дата обновления"/>
-                <DatePicker Text="{Binding Task.UpdateTime}"/>
+                <DatePicker SelectedDate="{Binding Task.UpdateTime}"/>
                 <Label Content="Крайний исполнения задачи"/>
-                <DatePicker Text="{Binding Task.Deadline}"/>
+                <DatePicker SelectedDate="{Binding Task.Deadline}"/>
                 <Label Content="Предшествующая задача"/>
                 <ComboBox ItemsSource="{Binding BeforTasks}"
                           SelectedItem="{Binding SelectBeforTask}"
                           DisplayMemberPath="ShortTitle"/>
                 <Label Content="Фактическое время начала выполнения"/>
-                <DatePicker Text="{Binding Task.StartActualTime}"/>
+                <DatePicker SelectedDate="{Binding Task.StartActualTime}"/>
                 <Label Content="Фактическое время завершения выполнения"/>
-                <DatePicker Text="{Binding Task.FinishActualTime}"/>
+                <DatePicker SelectedDate="{Binding Task.FinishActualTime}"/>
                 <Button Content="Сохранить" Command="{Binding Save}"/>
             </StackPanel>
         </ScrollViewer>

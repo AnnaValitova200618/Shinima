@@ -111,7 +111,6 @@ public partial class DbProductContext : DbContext
 
             entity.HasOne(d => d.IdExecutiveEmployeeNavigation).WithMany(p => p.Tasks)
                 .HasForeignKey(d => d.IdExecutiveEmployee)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Task_Employee");
 
             entity.HasOne(d => d.IdPreviousTaskNavigation).WithMany(p => p.InverseIdPreviousTaskNavigation)
@@ -125,7 +124,6 @@ public partial class DbProductContext : DbContext
 
             entity.HasOne(d => d.IdStatusNavigation).WithMany(p => p.Tasks)
                 .HasForeignKey(d => d.IdStatus)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Task_Status");
         });
 
